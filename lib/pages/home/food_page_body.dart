@@ -1,11 +1,13 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/controllers/popular_product_controller.dart';
 import 'package:food_delivery/utils/colors.dart';
 import 'package:food_delivery/utils/dimensions.dart';
 import 'package:food_delivery/widgets/app_column.dart';
 import 'package:food_delivery/widgets/big_text.dart';
 import 'package:food_delivery/widgets/icon_and_text_widget.dart';
 import 'package:food_delivery/widgets/small_text.dart';
+import 'package:get/get.dart';
 
 class FoodPageBody extends StatefulWidget {
   const FoodPageBody({Key? key}) : super(key: key);
@@ -43,29 +45,35 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     return Column(
       children: [
         // slider
-        Container(
-          height: Dimensions.pageView,
-          child: PageView.builder(
-            controller: pageController,
-            itemCount: 5,
-            itemBuilder: (context, position) {
-              return _buildPageItem(position);
-            },
-          ),
-        ),
+        GetBuilder<PopularProductController>(builder: (popularProducts) {
+          return Container(
+            height: Dimensions.pageView,
+            child: PageView.builder(
+              controller: pageController,
+              itemCount: popularProducts.popularProductList.length,
+              itemBuilder: (context, position) {
+                return _buildPageItem(position);
+              },
+            ),
+          );
+        }),
 
         //dots
-        DotsIndicator(
-          dotsCount: 5,
-          position: _currPageValue,
-          decorator: DotsDecorator(
-              // Inactive color
-              activeColor: AppColors.mainColor,
-              size: const Size.square(9.0),
-              activeSize: const Size(18.0, 9.0),
-              activeShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimensions.radius20))),
-        ),
+        GetBuilder<PopularProductController>(builder: (popularProducts) {
+          return DotsIndicator(
+            dotsCount: popularProducts.popularProductList.isEmpty
+                ? 1
+                : popularProducts.popularProductList.length,
+            position: _currPageValue,
+            decorator: DotsDecorator(
+                // Inactive color
+                activeColor: AppColors.mainColor,
+                size: const Size.square(9.0),
+                activeSize: const Size(18.0, 9.0),
+                activeShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimensions.radius20))),
+          );
+        }),
 
         //Popular tile
         SizedBox(height: Dimensions.height30),
@@ -107,8 +115,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     width: Dimensions.listViewImageSize,
                     height: Dimensions.listViewImageSize,
                     decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.radius20),
+                      borderRadius: BorderRadius.circular(Dimensions.radius20),
                       color: Colors.white38,
                       image: const DecorationImage(
                         fit: BoxFit.cover,
@@ -122,8 +129,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(Dimensions.radius20),
-                            bottomRight:
-                                Radius.circular(Dimensions.radius20)),
+                            bottomRight: Radius.circular(Dimensions.radius20)),
                         color: Colors.white,
                       ),
                       child: Padding(
@@ -139,8 +145,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                             SmallText(text: 'with chineese characteristics'),
                             SizedBox(height: Dimensions.height10),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconAndTextWidget(
                                     icon: Icons.circle_sharp,
@@ -247,7 +252,9 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     top: Dimensions.height15,
                     left: Dimensions.width15,
                     right: Dimensions.width15),
-                child: AppColumn(text: 'Chinese Side',),
+                child: AppColumn(
+                  text: 'Chinese Side',
+                ),
               ),
             ),
           ),
