@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/controllers/recommended_product_controller.dart';
+import 'package:food_delivery/routes/route_helper.dart';
+import 'package:food_delivery/utils/app_constants.dart';
 import 'package:food_delivery/utils/colors.dart';
 import 'package:food_delivery/utils/dimensions.dart';
 import 'package:food_delivery/widgets/app_icon.dart';
 import 'package:food_delivery/widgets/big_text.dart';
 import 'package:food_delivery/widgets/expandable_text_widget.dart';
+import 'package:get/get.dart';
 
 class RecommendedFoodDetail extends StatelessWidget {
-  const RecommendedFoodDetail({Key? key}) : super(key: key);
+  final int pageId;
+  const RecommendedFoodDetail({Key? key, required this.pageId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var product =
+        Get.find<RecommendedProductController>().recommendedProductList[pageId];
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false, //turn off the back arrow leading
             toolbarHeight: 70,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppIcon(icon: Icons.clear),
+                GestureDetector(
+                    onTap: () {
+                      Get.toNamed(RouteHelper.getInitial());
+                    },
+                    child: AppIcon(icon: Icons.clear)),
                 AppIcon(
                   icon: Icons.shopping_cart_outlined,
                 )
@@ -37,7 +50,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                 ),
                 child: Center(
                     child: BigText(
-                  text: "Chinese Side",
+                  text: product.name!,
                   size: Dimensions.font26,
                 )),
                 width: double.maxFinite,
@@ -48,8 +61,8 @@ class RecommendedFoodDetail extends StatelessWidget {
             backgroundColor: AppColors.yellowColor,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/image/food0.png',
+              background: Image.network(
+                AppConstants.BASE_URL + AppConstants.UPLOAD_URL + product.img!,
                 width: double.maxFinite,
                 fit: BoxFit.cover,
               ),
@@ -64,9 +77,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                       left: Dimensions.width20,
                       right: Dimensions.width20,
                     ),
-                    child: ExpandableTextWidget(
-                        text:
-                            "Biryani is a timeless culinary masterpiece that has captured the hearts and palates of food enthusiasts worldwide. With its origins deeply rooted in the rich Mughlai cuisine of the Indian subcontinent, Biryani has evolved into a beloved dish that combines fragrant rice, tender meat or vegetables, and a symphony of aromatic spices. At our online app, we bring you an authentic Biryani experience like no other. Each grain of rice is infused with the flavors of exotic spices such as cardamom, cloves, cinnamon, and saffron, creating a tantalizing aroma that whets the appetite. The meat, whether it's succulent chicken, tender lamb, or juicy shrimp, is marinated and slow-cooked to perfection, resulting in melt-in-your-mouth goodness. Our Biryani is a harmonious blend of textures and flavors. The long-grain basmati rice, cooked to fluffy perfection, is layered with the meat or vegetables, creating a symphony of taste with every spoonful. The delicate balance of spices, meticulously measured and combined, adds depth and complexity to every bite. But Biryani is more than just a dish; it's an experience that brings people together. Whether you're enjoying it at a family gathering, a festive celebration, or simply treating yourself to a flavorful meal, Biryani is a feast for all senses. The vibrant colors, the tantalizing aromas, and the explosion of flavors will transport you to a culinary paradise. With our online app, you can savor the authentic taste of Biryani from the comfort of your own home. We offer a variety of options to cater to different preferences, including vegetarian, chicken, lamb, and seafood Biryani. Each dish is carefully crafted by our skilled chefs, using only the finest ingredients and traditional cooking techniques. Treat yourself to the indulgent flavors of Biryani today. Order from our online app and experience the magic of this legendary dish delivered right to your doorstep. Get ready to embark on a culinary journey that will leave you craving for more. Bon appétit!"),
+                    child: ExpandableTextWidget(text: product.description!),
                   ),
                 ],
               ),
@@ -94,7 +105,7 @@ class RecommendedFoodDetail extends StatelessWidget {
                   iconColor: Colors.white,
                 ),
                 BigText(
-                  text: "\$ 12.88 " + " X " + " 0 ",
+                  text: "\$ ${product.price!}   X  0 ",
                   color: AppColors.mainBlackColor,
                   size: Dimensions.font26,
                 ),
@@ -125,16 +136,19 @@ class RecommendedFoodDetail extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.only(
-                      top: Dimensions.height20,
-                      bottom: Dimensions.height20,
-                      left: Dimensions.width20,
-                      right: Dimensions.width20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white),
-                  child: Icon(Icons.favorite, color: AppColors.mainColor,)
-                ),
+                    padding: EdgeInsets.only(
+                        top: Dimensions.height20,
+                        bottom: Dimensions.height20,
+                        left: Dimensions.width20,
+                        right: Dimensions.width20),
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius20),
+                        color: Colors.white),
+                    child: Icon(
+                      Icons.favorite,
+                      color: AppColors.mainColor,
+                    )),
                 Container(
                   padding: EdgeInsets.all(Dimensions.height20),
                   decoration: BoxDecoration(
