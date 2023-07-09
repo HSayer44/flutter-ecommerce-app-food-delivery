@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/data/repo/popular_product_repo.dart';
+import 'package:food_delivery/models/cart_model.dart';
 import 'package:food_delivery/models/products_model.dart';
 import 'package:food_delivery/utils/colors.dart';
 import 'package:get/get.dart';
@@ -48,15 +49,19 @@ class PopularProductController extends GetxController {
   }
 
   int checkQuantity(int quantity) {
-    if (quantity < 0) {
+    if ((_inCartItems + quantity) < 0) {
       Get.snackbar(
         'Item count',
         "sorry, you didn't buy yet!",
         backgroundColor: AppColors.mainColor,
         colorText: Colors.white,
       );
+      if (_inCartItems>0) {
+        _quantity = -_inCartItems;
+        return _quantity;
+      }
       return 0;
-    } else if (quantity > 20) {
+    } else if ((_inCartItems + quantity) > 20) {
       Get.snackbar(
         'Item count',
         "Sorry, you can't buy more!",
@@ -70,30 +75,41 @@ class PopularProductController extends GetxController {
   }
 
   //when we open a new page
-  void initProduct(CartController cart) {
+  void initProduct(ProductModel product, CartController cart) {
     _quantity = 0;
     _inCartItems = 0;
     _cart = cart;
+    var exist = false;
+    exist = _cart.existInCart(product);
+    // print(exist.toString());
+    if (exist) {
+      _inCartItems = _cart.getQuantity(product);
+    }
+    print('thte quantity in the cart is ' + _inCartItems.toString());
 
     //get from storage and set it in cartItems
   }
 
   void addItem(ProductModel product) {
-    if (quantity > 0) {
-      _cart.addItem(product, _quantity);
-      _quantity=0;
-      _cart.items.forEach((key, value) {
-        print("the id is: " +
-            value.id.toString() +
-            " and the quantity is: " +
-            value.quantity.toString());
-      });
-    }
-    Get.snackbar(
-      'Item count',
-      "Sorry, you should at least add one item to the cart!",
-      backgroundColor: AppColors.mainColor,
-      colorText: Colors.white,
-    );
+    _cart.addItem(product, _quantity);
+
+    _quantity = 0;
+    _inCartItems = _cart.getQuantity(product);
+
+    _cart.items.forEach((key, value) {
+      print("the id is: " +
+          value.id.toString() +
+          " and the quantity is: " +
+          value.quantity.toString());
+    });
+    update(); //update the Ui,
+  }
+
+  int get totalItems{
+    return _cart.totalItems;
+  }
+
+  List<CartModel> get getCartItems{
+    return _cart.getCartItems;
   }
 }

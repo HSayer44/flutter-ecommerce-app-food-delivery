@@ -5,13 +5,17 @@ class Product {
   late List<ProductModel>? _products;
 
   //access the _products list from outside the class
-  List<ProductModel> get products => _products!; 
+  List<ProductModel> get products => _products!;
 
-  Product({required totalSize, required typeId, required offset, required products}){
-      this._totalSize = totalSize;
-      this._typeId = typeId;
-      this._offset = offset;
-      this._products = products;
+  Product(
+      {required totalSize,
+      required typeId,
+      required offset,
+      required products}) {
+    this._totalSize = totalSize;
+    this._typeId = typeId;
+    this._offset = offset;
+    this._products = products;
   }
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -75,18 +79,16 @@ class ProductModel {
     typeId = json['type_id'];
   }
 
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['id'] = this.id;
-  //   data['name'] = this.name;
-  //   data['description'] = this.description;
-  //   data['price'] = this.price;
-  //   data['stars'] = this.stars;
-  //   data['img'] = this.img;
-  //   data['location'] = this.location;
-  //   data['created_at'] = this.createdAt;
-  //   data['updated_at'] = this.updatedAt;
-  //   data['type_id'] = this.typeId;
-  //   return data;
-  // }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'price': this.price,
+      'img': this.img,
+      'location': this.location,
+      'created_at': this.createdAt,
+      'updated_at': this.updatedAt,
+      'type_id': this.typeId,
+    };
+  }
 }

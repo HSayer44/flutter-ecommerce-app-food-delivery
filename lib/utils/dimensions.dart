@@ -37,6 +37,7 @@ class Dimensions {
   static double listViewTextSize = screenWidth/3.9; // factor 390/100
 
   static double popularFoodImgSize = screenHeight/2.41;
+  static double splashImage = screenHeight/3.38;
   //scale facttor comes from 844/120 or 844/10 or 844/20
   static double bottomBarHeight = screenHeight/7.03;
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/controllers/cart_controller.dart';
 import 'package:food_delivery/controllers/popular_product_controller.dart';
+import 'package:food_delivery/pages/cart/cart_page.dart';
 import 'package:food_delivery/pages/home/main_food_page.dart';
+import 'package:food_delivery/routes/route_helper.dart';
 import 'package:food_delivery/utils/app_constants.dart';
 import 'package:food_delivery/utils/colors.dart';
 import 'package:food_delivery/utils/dimensions.dart';
@@ -16,14 +18,16 @@ import '../../widgets/big_text.dart';
 
 class PopularFoodDetails extends StatelessWidget {
   final int pageId;
+  final String fromPage;
 
-  const PopularFoodDetails({Key? key, required this.pageId}) : super(key: key);
+  const PopularFoodDetails({Key? key, required this.pageId, required this.fromPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var product =
         Get.find<PopularProductController>().popularProductList[pageId];
-        Get.find<PopularProductController>().initProduct(Get.find<CartController>());
+    Get.find<PopularProductController>()
+        .initProduct(product, Get.find<CartController>());
     // print('page id is '+pageId.toString());
     // print('product name is '+product.name.toString());
     return Scaffold(
@@ -55,17 +59,60 @@ class PopularFoodDetails extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => MainFoodPage());
-                  },
+                    if (fromPage == 'cartpage') {
+                      print('route to cart page');
+                      Get.toNamed(RouteHelper.getCartPage());
+                    } else {
+                    print('route to home page');
+                    Get.toNamed(RouteHelper.getInitial());
+                  }},
                   child: AppIcon(
                     icon: Icons.arrow_back_ios,
                     backgroundColor: Colors.white.withOpacity(0.4),
                   ),
                 ),
-                AppIcon(
-                  icon: Icons.shopping_cart_outlined,
-                  backgroundColor: Colors.white.withOpacity(0.4),
-                ),
+                GetBuilder<PopularProductController>(builder: (controller) {
+                  return GestureDetector(
+                    onTap: () {
+                      //tapable only if there are items in the cart
+                      if (controller.totalItems>=1) {
+                        Get.toNamed(RouteHelper.getCartPage());
+                      }
+                      
+                    },
+                    child: Stack(
+                      children: [
+                        AppIcon(
+                          icon: Icons.shopping_cart_outlined,
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                        ),
+                        controller.totalItems >= 1
+                            ? Positioned(
+                                right: 0,
+                                top: 0,
+                                child: AppIcon(
+                                  icon: Icons.circle,
+                                  size: 20,
+                                  iconColor: Colors.transparent,
+                                  backgroundColor: AppColors.mainColor,
+                                ),
+                              )
+                            : Container(),
+                        controller.totalItems >= 1
+                            ? Positioned(
+                                right: 6,
+                                top: 3,
+                                child: BigText(
+                                  text: controller.totalItems.toString(),
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Container()
+                      ],
+                    ),
+                  );
+                })
               ],
             ),
           ),
@@ -142,7 +189,7 @@ class PopularFoodDetails extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: Dimensions.width10 / 2),
-                      BigText(text: popularProduct.quantity.toString()),
+                      BigText(text: popularProduct.inCartItems.toString()),
                       SizedBox(width: Dimensions.width10 / 2),
                       GestureDetector(
                           onTap: () {

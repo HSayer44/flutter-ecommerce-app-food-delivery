@@ -1,6 +1,9 @@
+import 'package:food_delivery/pages/cart/cart_page.dart';
 import 'package:food_delivery/pages/food/popular_food_details.dart';
 import 'package:food_delivery/pages/food/recommended_food_detail.dart';
+import 'package:food_delivery/pages/home/home_page.dart';
 import 'package:food_delivery/pages/home/main_food_page.dart';
+import 'package:food_delivery/pages/splash/splash_page.dart';
 import 'package:get/get.dart';
 
 class RouteHelper {
@@ -8,29 +11,48 @@ class RouteHelper {
   static const String initial = "/";
   static const String popularFood = "/popular-food";
   static const String recommendedFood = "/recommended-food";
+  static const String cartPage = "/cart-page";
+  static const String splashPage = "/splash-page";
 
   //just to pass parameters inside them
   static String getInitial() => '$initial';
   //this is how we pass a parameter in ' ':
-  static String getPopularFood(int pageId) => '$popularFood?pageId=$pageId';
-  static String getRecommendedFood(int pageId) => '$recommendedFood?pageId=$pageId';
+  static String getPopularFood(int pageId, String fromPage) =>
+      '$popularFood?pageId=$pageId&fromPage=$fromPage';
+  static String getRecommendedFood(int pageId, String fromPage) =>
+      '$recommendedFood?pageId=$pageId&fromPage=$fromPage';
+  static String getCartPage() => '$cartPage';
+  static String getSplashPage() => '$splashPage';
 
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => MainFoodPage()),
+    GetPage(
+        name: initial, page: () => HomePage(), transition: Transition.fadeIn),
     GetPage(
         name: popularFood,
         page: () {
           //here we get the parameter above
           var pageId = Get.parameters['pageId'];
-          return PopularFoodDetails(pageId: int.parse(pageId!));
+          var fromPage = Get.parameters['fromPage'];
+          return PopularFoodDetails(
+              pageId: int.parse(pageId!), fromPage: fromPage!);
         },
         transition: Transition.fadeIn),
     GetPage(
         name: recommendedFood,
         page: () {
           var pageId = Get.parameters['pageId'];
-          return RecommendedFoodDetail(pageId: int.parse(pageId!));
+          var fromPage = Get.parameters['fromPage'];
+          return RecommendedFoodDetail(
+              pageId: int.parse(pageId!), fromPage: fromPage!);
         },
         transition: Transition.fadeIn),
+    GetPage(
+      name: cartPage,
+      page: () {
+        return CartPage();
+      },
+      transition: Transition.fadeIn,
+    ),
+    GetPage(name: splashPage, page: () => SplashScreen()),
   ];
 }
