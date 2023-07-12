@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/pages/account/account_page.dart';
+import 'package:food_delivery/pages/cart/cart_history.dart';
 import 'package:food_delivery/pages/home/main_food_page.dart';
 import 'package:food_delivery/utils/colors.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
+import '../auth/sign_in_page.dart';
+import '../auth/sign_up_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,18 +20,18 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late PersistentTabController _controller;
 
-  List pages = [
-    MainFoodPage(),
-    Container(
-      child: Center(child: Text('Next 1 Page')),
-    ),
-    Container(
-      child: Center(child: Text('Next 2 Page')),
-    ),
-    Container(
-      child: Center(child: Text('Next 3 Page')),
-    ),
-  ];
+  // List pages = [
+  //   MainFoodPage(),
+  //   Container(
+  //     child: Center(child: Text('Next 1 Page')),
+  //   ),
+  //   Container(
+  //     child: Center(child: Text('Next 2 Page')),
+  //   ),
+  //   Container(
+  //     child: Center(child: Text('Next 3 Page')),
+  //   ),
+  // ];
 
   void onTapNav(int index) {
     setState(() {
@@ -77,15 +82,9 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _buildScreens() {
     return [
       MainFoodPage(),
-      Container(
-        child: Center(child: Text('Next 1 Page')),
-      ),
-      Container(
-        child: Center(child: Text('Next 2 Page')),
-      ),
-      Container(
-        child: Center(child: Text('Next 3 Page')),
-      ),
+      Container(child: Text('history'),),
+      CartHistory(),
+      AccountPage(),
     ];
   }
 
@@ -94,25 +93,25 @@ class _HomePageState extends State<HomePage> {
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.home),
         title: ("Home"),
-        activeColorPrimary: CupertinoColors.activeOrange,
+        activeColorPrimary: AppColors.yellowColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.archivebox_fill),
         title: ("Archive"),
-        activeColorPrimary: CupertinoColors.activeOrange,
+        activeColorPrimary: AppColors.yellowColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
        PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.cart_fill),
         title: ("cart"),
-        activeColorPrimary: CupertinoColors.activeOrange,
+        activeColorPrimary: AppColors.yellowColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
        PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.person),
         title: ("me"),
-        activeColorPrimary: CupertinoColors.activeOrange,
+        activeColorPrimary: AppColors.yellowColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];

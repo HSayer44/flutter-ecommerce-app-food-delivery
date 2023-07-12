@@ -125,5 +125,41 @@ class CartController extends GetxController {
     for (int i = 0; i < storageItems.length; i++) {
       _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
     }
+
+    
+  }
+  void addToHistory(){
+      cartRepo.addToCartHistoryList();
+      clear();
+    }
+  //clear when check out
+  void clear(){
+    _items={};
+    update();
+  }
+
+  List<CartModel> getCartHistoryList(){
+    return cartRepo.getCartHistoryList();
+  }
+
+  //set moreOrder map from cartHistory page map to _items map
+  set setItems(Map<int, CartModel> setItems){
+    _items = {};
+    _items = setItems;
+  }
+
+  void addToCartList(){
+    cartRepo.addToCartList(getCartItems);
+    update();
+  }
+
+  void clearCardHistory(){
+    cartRepo.clearCardHistory();
+    update();
   }
 }
+
+
+
+
+
